@@ -23,6 +23,30 @@ python analysis.py
 ## Results
 Results are written to `results.json`. Charts are saved to `figures/`.
 
+## Results (latest run)
+
+On the public Adult dataset test set, demographic parity difference fell from 17.9% for a standard unconstrained logistic regression to 2.0% for my class-balanced LightGBM with per-sex thresholds, at 85.4% vs 85.0% accuracy, though the equal-opportunity gap rose from 12.7% to 32.2%.
+
+| Metric | Value |
+|---|---|
+| baseline_score | 0.1788 |
+| improved_score | 0.02033 |
+| improvement | 0.1585 |
+| baseline_score_std | 0 |
+| improved_score_std | 0 |
+| baseline_accuracy | 0.8541 |
+| improved_accuracy | 0.85 |
+| baseline_accuracy_std | 0 |
+| improved_accuracy_std | 1.11e-16 |
+| baseline_eo_gap | 0.127 |
+| improved_eo_gap | 0.3224 |
+| baseline_f1 | 0.6612 |
+| improved_f1 | 0.6455 |
+
+Run on 2026-10-20. Full output: [results.json](results.json) · [run.log](run.log)
+
+Notes: Single stratified split (seed 42); seeds 42-44 vary only model randomness. No hyperparameter search was run; LightGBM settings are fixed. Thresholds are selected on the validation split, never on test. Both models are trained on the fit split only. Sex is included as a feature in both models. Standard deviations are population std (ddof=0) over 3 seeds; logistic regression is deterministic so its std is 0. Demographic parity ignores base-rate differences and the equal-opportunity gap is reported as a secondary fairness check. Results are from the public Adult data, not the paper's reinforcement-learning setting.
+
 ## Reference
 
 This project is motivated by the following paper:
