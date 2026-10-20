@@ -1,0 +1,33 @@
+{
+  "question": "Can a class-balanced LightGBM with validation-tuned, group-specific decision thresholds give a smaller sex-based demographic parity gap in allocation decisions than a standard unconstrained logistic regression on the public Adult dataset, at a small cost in accuracy?",
+  "method": "Stand-in for multi-agent reward allocation: each person is an agent, income >50K is the reward-worthy outcome, sex is the sensitive attribute. Stratified 75/25 train/test split (seed 42); training part split 80/20 into fit/validation. Baseline: unconstrained logistic regression, single 0.5 threshold. Improved: class-balanced LightGBM with per-sex thresholds chosen on validation to equalise allocation rates. Models run with seeds 42, 43, 44.",
+  "dataset": {
+    "name": "Adult (OpenML data_id 1590)",
+    "source_url": "https://www.openml.org/d/1590",
+    "n_rows": 48842,
+    "n_train": 36631,
+    "n_test": 12211,
+    "same_as_paper": false,
+    "baseline_is_papers_method": false
+  },
+  "metric_name": "demographic parity difference on test (|allocation rate F - M|)",
+  "higher_is_better": false,
+  "baseline": "Unconstrained standard logistic regression (one-hot categoricals, standardised numerics), predicted positives at threshold 0.5.",
+  "improved": "Class-balanced LightGBM (fit on fit split) with separate thresholds for Female and Male chosen on the validation split to minimise the allocation-rate gap (ties broken by validation accuracy).",
+  "metrics": {
+    "baseline_score": 0.17882639426662209,
+    "improved_score": 0.020332414939943838,
+    "improvement": 0.15849397932667825,
+    "baseline_score_std": 0.0,
+    "improved_score_std": 0.0,
+    "baseline_accuracy": 0.8540660060601097,
+    "improved_accuracy": 0.8499713373188108,
+    "baseline_accuracy_std": 0.0,
+    "improved_accuracy_std": 1.1102230246251565e-16,
+    "baseline_eo_gap": 0.12696509566304298,
+    "improved_eo_gap": 0.322408460942173,
+    "baseline_f1": 0.6612167300380228,
+    "improved_f1": 0.6455108359133127
+  },
+  "notes": "Single stratified split (seed 42); seeds 42-44 vary only model randomness. No hyperparameter search was run; LightGBM settings are fixed. Thresholds are selected on the validation split, never on test. Both models are trained on the fit split only. Sex is included as a feature in both models. Standard deviations are population std (ddof=0) over 3 seeds; logistic regression is deterministic so its std is 0. Demographic parity ignores base-rate differences and the equal-opportunity gap is reported as a secondary fairness check. Results are from the public Adult data, not the paper's reinforcement-learning setting."
+}
